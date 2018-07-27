@@ -8,6 +8,7 @@ import pendingParticipants from 'reducers/pendingParticipantsReducer'
 import participants from 'reducers/participantsReducer'
 import peopleForm from 'reducers/peopleFormReducer'
 import peopleSearch from 'reducers/peopleSearchReducer'
+import relationship from 'reducers/relationshipReducer'
 import relationships from 'reducers/relationshipsReducer'
 import routing from 'reducers/routerReducer'
 import safelySurrenderedBaby from 'reducers/safelySurrenderedBabyReducer'
@@ -34,6 +35,7 @@ const rootReducer = combineReducers({
   pendingParticipants,
   peopleForm,
   peopleSearch,
+  relationship,
   relationships,
   routing,
   safelySurrenderedBaby,

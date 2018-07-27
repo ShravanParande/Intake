@@ -1,5 +1,6 @@
 import {fromJS} from 'immutable'
 import {
+  genderFormat,
   getPeopleSelector,
 } from 'selectors/screening/relationshipsSelectors'
 import * as matchers from 'jasmine-immutable-matchers'
@@ -23,7 +24,7 @@ describe('relationshipsSelectors', () => {
           legacy_id: '10',
           name: 'Ricky Robinson',
           relationships: [],
-          gender: 'M',
+          gender: 'Male',
           age: '20 yrs',
         },
         {
@@ -31,7 +32,7 @@ describe('relationshipsSelectors', () => {
           legacy_id: '20',
           name: 'Johny Robinson',
           relationships: [],
-          gender: 'M',
+          gender: 'Male',
           age: '30 yrs',
         },
         {
@@ -39,7 +40,7 @@ describe('relationshipsSelectors', () => {
           legacy_id: '30',
           name: 'Will Carlson',
           relationships: [],
-          gender: 'M',
+          gender: 'Male',
           age: '40 yrs',
         },
       ]))
@@ -89,6 +90,7 @@ describe('relationshipsSelectors', () => {
               indexed_person_relationship: '17',
               related_person_age: 30,
               related_person_age_unit: 'Y',
+              relationship_id: 1,
               legacy_descriptor: {
                 legacy_id: '2',
               },
@@ -104,6 +106,7 @@ describe('relationshipsSelectors', () => {
               indexed_person_relationship: '258',
               related_person_age: 30,
               related_person_age_unit: 'Y',
+              relationship_id: 2,
               legacy_descriptor: {
                 legacy_id: '1',
               },
@@ -130,6 +133,7 @@ describe('relationshipsSelectors', () => {
               indexed_person_relationship: '17',
               related_person_age: 30,
               related_person_age_unit: 'Y',
+              relationship_id: 1,
               legacy_descriptor: {
                 legacy_id: '3',
               },
@@ -145,6 +149,7 @@ describe('relationshipsSelectors', () => {
               indexed_person_relationship: '258',
               related_person_age: 30,
               related_person_age_unit: 'Y',
+              relationship_id: 2,
               legacy_descriptor: {
                 legacy_id: '1',
               },
@@ -166,13 +171,14 @@ describe('relationshipsSelectors', () => {
           dateOfBirth: '01/15/1986',
           legacy_id: '3',
           name: 'Ricky Robinson',
-          gender: 'M',
+          gender: 'Male',
           age: '20 yrs',
           relationships: [
             {
+              id: 1,
               absent_parent_code: 'Y',
               dateOfBirth: '03/15/1990',
-              gender: 'M',
+              gender: 'Male',
               name: 'Johny Robinson',
               legacy_descriptor: {legacy_id: '2'},
               type: 'Brother',
@@ -183,9 +189,10 @@ describe('relationshipsSelectors', () => {
               age: '30 yrs',
             },
             {
+              id: 2,
               absent_parent_code: 'N',
               dateOfBirth: '02/15/1991',
-              gender: 'M',
+              gender: 'Male',
               name: 'Will Carlson',
               legacy_descriptor: {legacy_id: '1'},
               type: 'Nephew (Paternal)',
@@ -201,13 +208,14 @@ describe('relationshipsSelectors', () => {
           dateOfBirth: '03/15/1990',
           legacy_id: '2',
           name: 'Johny Robinson',
-          gender: 'M',
+          gender: 'Male',
           age: '20 yrs',
           relationships: [
             {
+              id: 1,
               absent_parent_code: 'Y',
               dateOfBirth: '01/15/1986',
-              gender: 'M',
+              gender: 'Male',
               name: 'Ricky Robinson',
               legacy_descriptor: {legacy_id: '3'},
               type: 'Brother',
@@ -218,9 +226,10 @@ describe('relationshipsSelectors', () => {
               age: '30 yrs',
             },
             {
+              id: 2,
               absent_parent_code: 'N',
               dateOfBirth: '02/15/1991',
-              gender: 'M',
+              gender: 'Male',
               name: 'Will Carlson',
               legacy_descriptor: {legacy_id: '1'},
               type: 'Nephew (Paternal)',
@@ -233,6 +242,19 @@ describe('relationshipsSelectors', () => {
           ],
         },
       ]))
+    })
+  })
+
+  describe('genderFormat', () => {
+    it('displays gender as Male if the data is male', () => {
+      expect(genderFormat('male')).toEqual('Male')
+    })
+    it('displays gender if the data is M/F/U/I', () => {
+      expect(genderFormat('M')).toEqual('Male')
+      expect(genderFormat('F')).toEqual('Female')
+    })
+    it('displays empty string if no key is map', () => {
+      expect(genderFormat('W')).toEqual('')
     })
   })
 })

@@ -16,18 +16,19 @@ export class ActionMenu extends Component {
   }
 
   handleShowModal() {
+    this.props.fetchRelationship(this.props.relationship.id)
     this.setState({show: true})
   }
 
   renderModal() {
-    const {onChange, person, relationship} = this.props
+    const {editRelationship, onChange, onSave} = this.props
 
     return (
       <EditRelationshipModal
         closeModal={this.closeModal}
         onChange={onChange}
-        person={person}
-        relationship={relationship}
+        onSave={onSave}
+        relationship={editRelationship}
         show={this.state.show}
       />
     )
@@ -63,26 +64,32 @@ const personPropType = PropTypes.shape({
   name: PropTypes.string,
 })
 const relationshipPropType = PropTypes.shape({
-  absent_parent_code: PropTypes.string,
-  age: PropTypes.string,
-  dateOfBirth: PropTypes.string,
-  legacy_descriptor: PropTypes.object,
-  gender: PropTypes.string,
-  name: PropTypes.string,
-  person_card_exists: PropTypes.bool,
-  same_home_code: PropTypes.string,
-  secondaryRelationship: PropTypes.string,
-  type: PropTypes.string,
-  type_code: PropTypes.string,
+  absentParentIndicator: PropTypes.bool,
+  clientAge: PropTypes.string,
+  clientDateOfBirth: PropTypes.string,
+  clientGender: PropTypes.string,
+  clientName: PropTypes.string,
+  endDate: PropTypes.string,
+  id: PropTypes.string,
+  legacyId: PropTypes.string,
+  relationshipType: PropTypes.string,
+  relativeAge: PropTypes.string,
+  relativeDateOfBirth: PropTypes.string,
+  relativeGender: PropTypes.string,
+  relativeName: PropTypes.string,
+  sameHomeStatus: PropTypes.string,
+  startDate: PropTypes.string,
 })
-
 ActionMenu.propTypes = {
+  editRelationship: relationshipPropType,
+  fetchRelationship: PropTypes.func,
   isScreening: PropTypes.bool,
   onChange: PropTypes.func,
   onClick: PropTypes.func,
+  onSave: PropTypes.func,
   pendingPeople: PropTypes.arrayOf(PropTypes.string),
   person: personPropType,
-  relationship: relationshipPropType,
+  relationship: PropTypes.object,
   screeningId: PropTypes.string,
 }
 

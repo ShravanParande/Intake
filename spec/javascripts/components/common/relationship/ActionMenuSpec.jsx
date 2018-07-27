@@ -6,24 +6,17 @@ import EditRelationshipModal from 'common/relationship/EditRelationshipModal'
 
 describe('ActionMenu', () => {
   const props = {
+    editRelationship: {id: '2'},
+    fetchRelationship: () => {},
     isScreening: true,
+    onChange: () => {},
     onClick: () => {},
+    onSave: () => {},
     pendingPeople: [],
-    person: {
-      name: 'Goku',
-    },
+    person: {name: 'Goku'},
+    relationship: {id: '1'},
     screeningId: '1',
-    relationship: {
-      absent_parent_code: 'Y',
-      name: 'Gohan',
-      age: '30 yrs',
-      gender: 'M',
-      person_card_exists: true,
-      secondaryRelationship: 'Father',
-      same_home_code: 'N',
-      type: 'son',
-      type_code: '210',
-    },
+
   }
   const renderActionMenu = (props) => shallow(<ActionMenu {...props}/>)
 
@@ -47,6 +40,15 @@ describe('ActionMenu', () => {
     expect(
       renderActionMenu(props).setState({show: true}).find(EditRelationshipModal).length
     ).toBe(1)
+  })
+
+  it('passes the props to EditRelationshipModal', () => {
+    expect(
+      renderActionMenu(props)
+        .setState({show: true})
+        .find(EditRelationshipModal)
+        .prop('relationship')
+    ).toEqual({id: '2'})
   })
 
   describe('closeModal', () => {

@@ -57,6 +57,7 @@ feature 'Relationship card' do
   end
   let(:jake) do
     {
+      relationship_id: '23',
       related_person_first_name: 'Jake',
       related_person_last_name: 'Campbell',
       relationship: 'Sister/Brother (Half)',
@@ -74,6 +75,7 @@ feature 'Relationship card' do
   end
   let(:jane) do
     {
+      relationship_id: '24',
       related_person_id: new_participant.id,
       related_person_legacy_id: '280',
       related_person_first_name: 'Jane',
@@ -92,6 +94,7 @@ feature 'Relationship card' do
   end
   let(:john) do
     {
+      relationship_id: '25',
       related_person_first_name: 'John',
       related_person_last_name: 'Florence',
       related_person_name_suffix: 'phd.',
@@ -123,6 +126,32 @@ feature 'Relationship card' do
         relationships: []
       }
     ]
+  end
+  let(:relationship) do
+    {
+      id: '23',
+      client_id: participant.id.to_s,
+      relative_id: '7',
+      relationship_type: 277,
+      absent_parent_indicator: true,
+      same_home_status: 'Y',
+      start_date: '1999-10-01',
+      end_date: '2010-10-01',
+      legacy_id: 'jake_legacy_id'
+    }
+  end
+  let(:edit_relationship) do
+    {
+      id: '23',
+      client_id: participant.id.to_s,
+      relative_id: '7',
+      relationship_type: 301,
+      absent_parent_indicator: true,
+      same_home_status: 'Y',
+      start_date: '1999-10-01',
+      end_date: '2010-10-01',
+      legacy_id: 'jake_legacy_id'
+    }
   end
   let(:hoi) do
     {
@@ -379,6 +408,28 @@ feature 'Relationship card' do
           end
 
           describe 'edit relationship of participant' do
+            before(:each) do
+              stub_request(:get,
+                ferb_api_url(
+                  FerbRoutes.screening_relationship_path(relationship[:id])
+                )).and_return(json_body(relationship.to_json, status: 200))
+
+              stub_request(:put,
+                ferb_api_url(FerbRoutes.screening_relationship_path(edit_relationship[:id])))
+                .with(body: hash_including(
+                  id: '23',
+                  client_id: participant.id.to_s,
+                  relative_id: '7',
+                  relationship_type: 301,
+                  absent_parent_indicator: true,
+                  same_home_status: 'Y',
+                  start_date: '1999-10-01',
+                  end_date: '2010-10-01',
+                  legacy_id: 'jake_legacy_id'
+                ))
+                .and_return(json_body(edit_relationship.to_json))
+            end
+
             scenario 'opens the modal edit relationship of a relatee' do
               assign_relationship(tag: 'td', element_text: 'Jake Campbell', link_text: 'Edit')
               within 'div.modal-body' do
@@ -387,15 +438,40 @@ feature 'Relationship card' do
                 )
                 expect(page).to have_content('Jake Campbell')
                 expect(page).to have_content('20 yrs')
+                expect(
+                  a_request(:get,
+                    ferb_api_url(FerbRoutes.screening_relationship_path(relationship[:id])))
+                ).to have_been_made
               end
+            end
+
+            scenario 'allows saving relationship' do
+              assign_relationship(tag: 'td', element_text: 'Jake Campbell', link_text: 'Edit')
+              within 'div.modal-content' do
+                select 'Ward/Guardian', from: 'edit_relationship'
+                click_button 'Save Relationship'
+              end
+
+              expect(
+                a_request(:put,
+                  ferb_api_url(
+                    FerbRoutes.screening_relationship_path(edit_relationship[:id])
+                  )).with(json_body(edit_relationship))
+              ).to have_been_made
             end
 
             scenario 'closes the modal edit relationship' do
               assign_relationship(tag: 'td', element_text: 'Jake Campbell', link_text: 'Edit')
               within 'div.modal-footer' do
-                find('button', text: 'CANCEL').click
+                click_button 'Cancel'
               end
+
               expect(page).to have_no_content('Edit Relationship Type')
+
+              expect(
+                a_request(:get,
+                  ferb_api_url(FerbRoutes.screening_relationship_path(relationship[:id])))
+              ).to have_been_made
             end
           end
         end

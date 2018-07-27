@@ -6,18 +6,24 @@ import RelationCard from 'common/relationship/RelationCard'
 import ScreeningCreateRelationship from 'views/ScreeningCreateRelationship'
 
 const actionsMenu = (
+  editRelationship,
+  fetchRelationship,
   row,
   pendingPeople,
   person,
   isScreening,
   screeningId,
   onChange,
-  onClick
+  onClick,
+  onSave
 ) =>
   <ActionMenu
+    editRelationship={editRelationship}
+    fetchRelationship={fetchRelationship}
     isScreening={isScreening}
     onChange={onChange}
     onClick={onClick}
+    onSave={onSave}
     pendingPeople={pendingPeople}
     person={person}
     relationship ={row}
@@ -31,9 +37,12 @@ const createRelationsData = (person, data) => {
 }
 
 export const Relationships = ({
+  editRelationship,
+  fetchRelationship,
   people,
   onChange,
   onClick,
+  onSave,
   screeningId,
   isScreening,
   pendingPeople = [],
@@ -50,16 +59,31 @@ export const Relationships = ({
                   <RelationCard
                     name={person.name}
                     data={person.relationships}
-                    tableActions={(cell, row) =>
-                      (actionsMenu(row, pendingPeople, person, isScreening, screeningId, onChange, onClick)
-                      )}
-                    ageDisplayFormatter={(cell, row) => <div> {row.dateOfBirth || ''} {row.age === '' ? '' : `(${row.age})`}</div>}
+                    tableActions={(cell, row) => (
+                      actionsMenu(
+                        editRelationship,
+                        fetchRelationship,
+                        row,
+                        pendingPeople,
+                        person,
+                        isScreening,
+                        screeningId,
+                        onChange,
+                        onClick,
+                        onSave
+                      )
+                    )}
+                    ageDisplayFormatter={(cell, row) => (
+                      <div> {row.dateOfBirth || ''} {row.age === '' ? '' : `(${row.age})`}</div>
+                    )}
                   />
                 </span>
               }
               {
                 (person.relationships.length === 0) &&
-                <div className='no-relationships well'><strong>{person.name}</strong> has no known relationships</div>
+                <div className='no-relationships well'>
+                  <strong>{person.name}</strong> has no known relationships
+                </div>
               }
             </div>
           </div>
@@ -106,10 +130,30 @@ export const Relationships = ({
   </div>
 )
 
+const relationshipPropType = PropTypes.shape({
+  absentParentIndicator: PropTypes.bool,
+  clientAge: PropTypes.string,
+  clientDateOfBirth: PropTypes.string,
+  clientGender: PropTypes.string,
+  clientName: PropTypes.string,
+  endDate: PropTypes.string,
+  id: PropTypes.string,
+  legacyId: PropTypes.string,
+  relationshipType: PropTypes.string,
+  relativeAge: PropTypes.string,
+  relativeDateOfBirth: PropTypes.string,
+  relativeGender: PropTypes.string,
+  relativeName: PropTypes.string,
+  sameHomeStatus: PropTypes.string,
+  startDate: PropTypes.string,
+})
 Relationships.propTypes = {
+  editRelationship: relationshipPropType,
+  fetchRelationship: PropTypes.func,
   isScreening: PropTypes.bool,
   onChange: PropTypes.func,
   onClick: PropTypes.func,
+  onSave: PropTypes.func,
   pendingPeople: PropTypes.arrayOf(PropTypes.string),
   people: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,

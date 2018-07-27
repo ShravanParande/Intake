@@ -32,6 +32,7 @@ describe('Store', () => {
         searchTerm: '',
         total: 0,
       },
+      relationship: {},
       relationships: [],
       routing: {locationBeforeTransitions: null},
       safelySurrenderedBaby: {

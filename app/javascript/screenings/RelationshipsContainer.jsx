@@ -1,17 +1,22 @@
 import {connect} from 'react-redux'
 import {Relationships} from 'common/Relationships'
 import {getPeopleSelector} from 'selectors/screening/relationshipsSelectors'
+import {getRelationshipSelector} from 'selectors/screening/relationshipSelectors'
 import {createPerson} from 'actions/personCardActions'
 import {getScreeningIdValueSelector} from 'selectors/screeningSelectors'
+import {fetchRelationship, setRelationship, updateRelationship} from 'actions/relationshipActions'
 
 const mapStateToProps = (state, _ownProps) => ({
   people: getPeopleSelector(state).toJS(),
   screeningId: getScreeningIdValueSelector(state),
   isScreening: true,
   pendingPeople: state.get('pendingParticipants').toJS(),
+  editRelationship: getRelationshipSelector(state).toJS(),
 })
 
 const mapDispatchToProps = (dispatch) => ({
+  fetchRelationship: (id) => dispatch(fetchRelationship(id)),
+  onChange: (field, value) => dispatch(setRelationship(field, value)),
   onClick: (relationship, screeningId) => {
     const relationshipsPerson = {
       screening_id: screeningId,
@@ -22,6 +27,7 @@ const mapDispatchToProps = (dispatch) => ({
     }
     dispatch(createPerson(relationshipsPerson))
   },
+  onSave: (id) => dispatch(updateRelationship(id)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Relationships)
