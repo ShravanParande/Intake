@@ -5,31 +5,6 @@ import AttachLink from 'common/relationship/AttachLink'
 import RelationCard from 'common/relationship/RelationCard'
 import ScreeningCreateRelationship from 'views/ScreeningCreateRelationship'
 
-const actionsMenu = (
-  editRelationship,
-  fetchRelationship,
-  row,
-  pendingPeople,
-  person,
-  isScreening,
-  screeningId,
-  onChange,
-  onClick,
-  onSave
-) =>
-  <ActionMenu
-    editRelationship={editRelationship}
-    fetchRelationship={fetchRelationship}
-    isScreening={isScreening}
-    onChange={onChange}
-    onClick={onClick}
-    onSave={onSave}
-    pendingPeople={pendingPeople}
-    person={person}
-    relationship ={row}
-    screeningId={screeningId}
-  />
-
 const createRelationsData = (person, data) => {
   const relationData = []
   data.map((relatedPerson) => relationData.push({focus_person: person, related_person: relatedPerson}))
@@ -60,18 +35,18 @@ export const Relationships = ({
                     name={person.name}
                     data={person.relationships}
                     tableActions={(cell, row) => (
-                      actionsMenu(
-                        editRelationship,
-                        fetchRelationship,
-                        row,
-                        pendingPeople,
-                        person,
-                        isScreening,
-                        screeningId,
-                        onChange,
-                        onClick,
-                        onSave
-                      )
+                      <ActionMenu
+                        editRelationship={editRelationship}
+                        fetchRelationship={fetchRelationship}
+                        isScreening={isScreening}
+                        onChange={onChange}
+                        onClick={onClick}
+                        onSave={onSave}
+                        pendingPeople={pendingPeople}
+                        person={person}
+                        relationship ={row}
+                        screeningId={screeningId}
+                      />
                     )}
                     ageDisplayFormatter={(cell, row) => (
                       <div> {row.dateOfBirth || ''} {row.age === '' ? '' : `(${row.age})`}</div>
